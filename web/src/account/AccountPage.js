@@ -13,14 +13,17 @@
 // limitations under the License.
 
 import React from "react";
+import {withRouter} from "react-router-dom";
 import UserEditPage from "../UserEditPage";
 
 class AccountPage extends React.Component {
   render() {
     return (
-      <UserEditPage organizationName={this.props.account.owner} userName={this.props.account.name} account={this.props.account} location={this.props.location} />
+      <div>
+        <UserEditPage organizationName={this.props.account.owner} userName={this.props.account.name} account={this.props.account} location={this.props.location} />
+      </div>
     );
   }
 }
 
-export default AccountPage;
+export default withRouter(AccountPage);

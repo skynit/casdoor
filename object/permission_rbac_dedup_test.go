@@ -132,7 +132,7 @@ func TestPermissionRuntimeGroupingIgnoresPersistedG(t *testing.T) {
 		t.Fatalf("expected exactly one persisted p rule, got %+v", rules)
 	}
 
-	allowed, err := Enforce(permission, []string{owner + "/alice", "data1", "read"})
+	allowed, err := Enforce(permission, []interface{}{owner + "/alice", "data1", "read"})
 	if err != nil {
 		t.Fatalf("Enforce() for alice error: %v", err)
 	}
@@ -150,7 +150,7 @@ func TestPermissionRuntimeGroupingIgnoresPersistedG(t *testing.T) {
 		t.Fatalf("failed to insert legacy g rule: %v", err)
 	}
 
-	allowed, err = Enforce(permission, []string{owner + "/mallory", "data1", "read"})
+	allowed, err = Enforce(permission, []interface{}{owner + "/mallory", "data1", "read"})
 	if err != nil {
 		t.Fatalf("Enforce() for mallory error: %v", err)
 	}
@@ -188,7 +188,7 @@ func TestUpdateRoleUsesRuntimeGroupingAndOnlyRenameRewritesP(t *testing.T) {
 
 	updatedRole := *role
 	updatedRole.Users = []string{owner + "/bob"}
-	affected, err = UpdateRole(role.GetId(), &updatedRole)
+	affected, err = UpdateRole(role.GetId(), &updatedRole, false, "en")
 	if err != nil {
 		t.Fatalf("UpdateRole() for membership change error: %v", err)
 	}
@@ -201,7 +201,7 @@ func TestUpdateRoleUsesRuntimeGroupingAndOnlyRenameRewritesP(t *testing.T) {
 		t.Fatalf("expected membership change to keep persisted permission rules unchanged")
 	}
 
-	allowed, err := Enforce(permission, []string{owner + "/alice", "data1", "read"})
+	allowed, err := Enforce(permission, []interface{}{owner + "/alice", "data1", "read"})
 	if err != nil {
 		t.Fatalf("Enforce() for alice after membership change error: %v", err)
 	}
@@ -209,7 +209,7 @@ func TestUpdateRoleUsesRuntimeGroupingAndOnlyRenameRewritesP(t *testing.T) {
 		t.Fatalf("expected alice to lose permission after membership change")
 	}
 
-	allowed, err = Enforce(permission, []string{owner + "/bob", "data1", "read"})
+	allowed, err = Enforce(permission, []interface{}{owner + "/bob", "data1", "read"})
 	if err != nil {
 		t.Fatalf("Enforce() for bob after membership change error: %v", err)
 	}
@@ -219,7 +219,7 @@ func TestUpdateRoleUsesRuntimeGroupingAndOnlyRenameRewritesP(t *testing.T) {
 
 	renamedRole := updatedRole
 	renamedRole.Name = "reader-new"
-	affected, err = UpdateRole(updatedRole.GetId(), &renamedRole)
+	affected, err = UpdateRole(updatedRole.GetId(), &renamedRole, false, "en")
 	if err != nil {
 		t.Fatalf("UpdateRole() for rename error: %v", err)
 	}
@@ -240,7 +240,7 @@ func TestUpdateRoleUsesRuntimeGroupingAndOnlyRenameRewritesP(t *testing.T) {
 		t.Fatalf("expected rename to rebuild persisted p rule with new role id, got %+v", rulesAfterRename)
 	}
 
-	allowed, err = Enforce(updatedPermission, []string{owner + "/bob", "data1", "read"})
+	allowed, err = Enforce(updatedPermission, []interface{}{owner + "/bob", "data1", "read"})
 	if err != nil {
 		t.Fatalf("Enforce() for bob after rename error: %v", err)
 	}

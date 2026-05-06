@@ -22,7 +22,7 @@ import i18next from "i18next";
 import {
   AppstoreOutlined,
   BarsOutlined, CheckCircleOutlined, DeploymentUnitOutlined, DollarOutlined, DownOutlined,
-  HomeOutlined,
+  HomeOutlined, KeyOutlined,
   LockOutlined, LogoutOutlined,
   MenuFoldOutlined, MenuUnfoldOutlined,
   SafetyCertificateOutlined, SettingOutlined,
@@ -32,6 +32,8 @@ import Dashboard from "./basic/Dashboard";
 import AppListPage from "./basic/AppListPage";
 import ShortcutsPage from "./basic/ShortcutsPage";
 import AccountPage from "./account/AccountPage";
+import ActivationCodePage from "./account/ActivationCodePage";
+import ActivationCodeListPage from "./ActivationCodeListPage";
 import OrganizationListPage from "./OrganizationListPage";
 import OrganizationEditPage from "./OrganizationEditPage";
 import UserListPage from "./UserListPage";
@@ -360,6 +362,11 @@ function ManagementPage(props) {
       Setting.getItem(<Link to="/apps">{i18next.t("general:Apps")}</Link>, "/apps"),
     ]));
 
+    res.push(Setting.getItem(<Link style={{color: textColor}} to="/activation-code">{i18next.t("beta:Activation Code")}</Link>, "/activation-code-group", <KeyOutlined />, [
+      Setting.getItem(<Link to="/activation-code">{i18next.t("beta:Activation Code")}</Link>, "/activation-code"),
+      ...(Setting.isAdminUser(props.account) ? [Setting.getItem(<Link to="/activation-codes">{i18next.t("beta:Activation Codes")}</Link>, "/activation-codes")] : []),
+    ]));
+
     res.push(Setting.getItem(<Link style={{color: textColor}} to="/organizations">{i18next.t("general:User Management")}</Link>, "/orgs", <AppstoreOutlined />, [
       Setting.getItem(<Link to="/organizations">{i18next.t("general:Organizations")}</Link>, "/organizations"),
       Setting.getItem(<Link to="/groups">{i18next.t("general:Groups")}</Link>, "/groups"),
@@ -446,7 +453,11 @@ function ManagementPage(props) {
       }
       const filteredChildren = [];
       item.children.forEach(itemChild => {
-        if (navItems.includes(itemChild.key)) {
+        if (itemChild.key === "/activation-code" || itemChild.key === "/activation-codes") {
+          if (navItems.includes("/activation-code-group") || navItems.includes("/activation-code") || navItems.includes("/activation-codes") || navItems.includes("all")) {
+            filteredChildren.push(itemChild);
+          }
+        } else if (navItems.includes(itemChild.key)) {
           filteredChildren.push(itemChild);
         }
       });
@@ -519,6 +530,7 @@ function ManagementPage(props) {
         <Route exact path="/apps" render={(props) => renderLoginIfNotLoggedIn(<AppListPage account={account} {...props} />)} />
         <Route exact path="/shortcuts" render={(props) => renderLoginIfNotLoggedIn(<ShortcutsPage account={account} {...props} />)} />
         <Route exact path="/account" render={(props) => renderLoginIfNotLoggedIn(<AccountPage account={account} {...props} />)} />
+        <Route exact path="/activation-code" render={(props) => renderLoginIfNotLoggedIn(<ActivationCodePage account={account} {...props} />)} />
         <Route exact path="/organizations" render={(props) => renderLoginIfNotLoggedIn(<OrganizationListPage account={account} {...props} />)} />
         <Route exact path="/organizations/:organizationName" render={(props) => renderLoginIfNotLoggedIn(<OrganizationEditPage account={account} onChangeTheme={onChangeTheme} {...props} />)} />
         <Route exact path="/organizations/:organizationName/users" render={(props) => renderLoginIfNotLoggedIn(<UserListPage account={account} {...props} />)} />
@@ -530,6 +542,7 @@ function ManagementPage(props) {
         <Route exact path="/users/:organizationName/:userName" render={(props) => <UserEditPage account={account} {...props} />} />
         <Route exact path="/invitations" render={(props) => renderLoginIfNotLoggedIn(<InvitationListPage account={account} {...props} />)} />
         <Route exact path="/invitations/:organizationName/:invitationName" render={(props) => renderLoginIfNotLoggedIn(<InvitationEditPage account={account} {...props} />)} />
+        <Route exact path="/activation-codes" render={(props) => renderLoginIfNotLoggedIn(<ActivationCodeListPage account={account} {...props} />)} />
         <Route exact path="/applications" render={(props) => renderLoginIfNotLoggedIn(<ApplicationListPage account={account} {...props} />)} />
         <Route exact path="/applications/:organizationName/:applicationName" render={(props) => renderLoginIfNotLoggedIn(<ApplicationEditPage account={account} {...props} />)} />
         <Route exact path="/providers" render={(props) => renderLoginIfNotLoggedIn(<ProviderListPage account={account} {...props} />)} />

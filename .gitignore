@@ -36,3 +36,5 @@ server
 
 # include helm-chart
 !manifests/casdoor
+
+mysql-data

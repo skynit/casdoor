@@ -515,4 +515,30 @@ func (a *Ormer) createTable() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = a.Engine.Sync2(new(ActivationCode))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.Engine.Sync2(new(BetaApplication))
+	if err != nil {
+		panic(err)
+	}
+}
+
+// GetOrmer returns the global ormer instance.
+func GetOrmer() *Ormer {
+	return ormer
+}
+
+// InitSqliteTestDB initializes ormer with an in-memory SQLite database.
+// Returns the engine for cleanup. This function is intended for testing only.
+func InitSqliteTestDB() (*xorm.Engine, error) {
+	engine, err := xorm.NewEngine("sqlite", ":memory:")
+	if err != nil {
+		return nil, err
+	}
+	ormer = &Ormer{Engine: engine}
+	return engine, nil
 }

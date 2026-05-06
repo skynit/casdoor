@@ -1,27 +1,54 @@
-version: '3.1'
 services:
-  casdoor:
-    restart: always
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      target: STANDARD
-    entrypoint: /bin/sh -c './server --createDatabase=true'
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      RUNNING_IN_DOCKER: "true"
-    volumes:
-      - ./conf:/conf/
-  db:
-    restart: always
-    image: mysql:8.0.25
-    platform: linux/amd64
-    ports:
-      - "3306:3306"
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    container_name: casdoor-mysql
     environment:
       MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: casdoor
+      MYSQL_USER: casdoor
+      MYSQL_PASSWORD: 123456
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
     volumes:
-      - /usr/local/docker/mysql:/var/lib/mysql
+      - ./mysql-data:/var/lib/mysql
+    cap_add:
+      - SYS_NICE
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p123456", "--silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - casdoor-network
+
+  casdoor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: STANDARD
+    image: skynit/casdoor:latest # 构建后的镜像标签
+    restart: unless-stopped
+    container_name: casdoor
+    ports:
+      - "8000:8000"
+    environment:
+      - RUNNING_IN_DOCKER=true
+      - driverName=mysql
+      - dataSourceName=root:123456@tcp(mysql:3306)/
+      - dbName=casdoor
+    volumes:
+      - ./conf:/conf
+      - ./logs:/logs
+      - ./files:/files
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - casdoor-network
+
+networks:
+  casdoor-network:
+    driver: bridge

@@ -18,6 +18,13 @@ export const NavItemTree = ({disabled, checkedKeys, defaultExpandedKeys, onCheck
           ],
         },
         {
+          title: i18next.t("beta:Activation Code"),
+          key: "/activation-code-group",
+          children: [
+            {title: i18next.t("beta:Activation Code"), key: "/activation-code"},
+          ],
+        },
+        {
           title: i18next.t("general:User Management"),
           key: "/orgs-top",
           children: [

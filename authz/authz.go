@@ -45,6 +45,10 @@ p, app-dcr, *, *, /api/get-oauth-token, *, *
 p, app-dcr, *, *, /api/userinfo, *, *
 p, app-dcr, *, *, /api/get-application, *, *
 p, *, *, POST, /api/signup, *, *
+p, *, *, POST, /api/activate-beta, *, *
+p, *, *, POST, /api/activate, *, *
+p, *, *, POST, /api/apply-beta, *, *
+p, *, *, GET, /api/get-beta-status, *, *
 p, *, *, GET, /api/get-email-and-phone, *, *
 p, *, *, POST, /api/login, *, *
 p, *, *, GET, /api/get-app-login, *, *

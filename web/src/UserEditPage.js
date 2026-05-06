@@ -516,33 +516,34 @@ class UserEditPage extends React.Component {
       );
     } else if (accountItem.name === "Phone") {
       return (
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Phone"), i18next.t("general:Phone - Tooltip"))} :
-          </Col>
-          <Col style={{paddingRight: "20px"}} span={5} >
-            <Input.Group compact style={{width: "280Px"}}>
-              <CountryCodeSelect
-                style={{width: "30%"}}
-                // disabled={!Setting.isLocalAdminUser(this.props.account) ? true : disabled}
-                initValue={this.state.user.countryCode}
-                onChange={(value) => {
-                  this.updateUserField("countryCode", value);
-                }}
-                countryCodes={this.getUserOrganization()?.countryCodes}
-              />
-              <Input value={this.state.user.phone}
-                style={{width: "70%"}}
-                disabled={!Setting.isLocalAdminUser(this.props.account) ? true : disabled}
-                onChange={e => {
-                  this.updateUserField("phone", e.target.value);
-                }} />
-            </Input.Group>
-          </Col>
-          <Col span={Setting.isMobile() ? 24 : 5} >
-            {this.isSelf() ? (<ResetModal application={this.state.application} countryCode={this.getCountryCode()} disabled={disabled} buttonText={i18next.t("user:Reset Phone...")} destType={"phone"} />) : null}
-          </Col>
-        </Row>
+        <React.Fragment>
+          <Row style={{marginTop: "20px"}} >
+            <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
+              {Setting.getLabel(i18next.t("general:Phone"), i18next.t("general:Phone - Tooltip"))} :
+            </Col>
+            <Col style={{paddingRight: "20px"}} span={5} >
+              <Input.Group compact style={{width: "280Px"}}>
+                <CountryCodeSelect
+                  style={{width: "30%"}}
+                  initValue={this.state.user.countryCode}
+                  onChange={(value) => {
+                    this.updateUserField("countryCode", value);
+                  }}
+                  countryCodes={this.getUserOrganization()?.countryCodes}
+                />
+                <Input value={this.state.user.phone}
+                  style={{width: "70%"}}
+                  disabled={!Setting.isLocalAdminUser(this.props.account) ? true : disabled}
+                  onChange={e => {
+                    this.updateUserField("phone", e.target.value);
+                  }} />
+              </Input.Group>
+            </Col>
+            <Col span={Setting.isMobile() ? 24 : 5} >
+              {this.isSelf() ? (<ResetModal application={this.state.application} countryCode={this.getCountryCode()} disabled={disabled} buttonText={i18next.t("user:Reset Phone...")} destType={"phone"} />) : null}
+            </Col>
+          </Row>
+        </React.Fragment>
       );
     } else if (accountItem.name === "Country/Region") {
       return (

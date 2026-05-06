@@ -1,0 +1,6 @@
+PASS: TestAddActivationCode (0.04s)
+PASS: TestGetAvailableActivationCode (0.00s) - FIFO verified
+PASS: TestMarkActivationCodeAssigned (0.00s)
+PASS: TestMarkActivationCodeExpired (0.00s)
+PASS: TestActivationCodeDuplicate (0.00s)
+5/5 PASS

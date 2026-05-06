@@ -1,0 +1,67 @@
+{
+  "active_plan": "D:\\projects\\go\\GOPATH\\src\\casdoor\\.sisyphus\\plans\\casdoor-beta-application.md",
+  "started_at": "2026-05-02T13:10:46.494Z",
+  "session_ids": [
+    "ses_21757735bffe5pLYRlvFaRglRT"
+  ],
+  "session_origins": {
+    "ses_21757735bffe5pLYRlvFaRglRT": "direct"
+  },
+  "plan_name": "casdoor-beta-application",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "**ActivationCode 模型 + 单元测试**",
+      "session_id": "ses_2172d62a1ffe5v3J8Q4V0xGoFi",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-02T13:27:24.226Z"
+    },
+    "todo:3": {
+      "task_key": "todo:3",
+      "task_label": "3",
+      "task_title": "**数据库迁移 + 配置**",
+      "session_id": "ses_2171b5763ffeKKJjIm8hZn26eV",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-02T13:39:53.661Z"
+    },
+    "todo:5": {
+      "task_key": "todo:5",
+      "task_label": "5",
+      "task_title": "**JWT 签名工具 + Cert 集成**",
+      "session_id": "ses_214c1a3b3ffexomQ8v5sm9nDMl",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-05-03T00:40:42.115Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "**ActivateBeta API + 单元测试**",
+      "session_id": "ses_214b13637ffe9HFAVXA6N06fYH",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-05-03T00:57:45.617Z"
+    },
+    "todo:8": {
+      "task_key": "todo:8",
+      "task_label": "8",
+      "task_title": "**路由注册 + 过期码清理**",
+      "session_id": "ses_214a75afdffeDAKHt7gV3wyfQG",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-03T01:01:56.987Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "**Plan Compliance Audit** — `oracle`",
+      "session_id": "ses_21466611cffe5A7n9Igv57p6tV",
+      "agent": "oracle",
+      "updated_at": "2026-05-03T02:15:19.714Z"
+    }
+  }
+}

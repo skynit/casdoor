@@ -39,6 +39,11 @@ func (p *PermissionLogProvider) Write(severity string, message string) error {
 	return p.addEntry("built-in", createdTime, p.providerName, fmt.Sprintf("[%s] %s", severity, message))
 }
 
+func (p *PermissionLogProvider) Write2(severity string, message string) error {
+	createdTime := time.Now().UTC().Format(time.RFC3339)
+	return p.addEntry("built-in", createdTime, p.providerName, fmt.Sprintf("[%s] %s", severity, message))
+}
+
 // Start is a no-op for PermissionLogProvider; it received its EntryAdder at
 // construction time and does not require background collection.
 func (p *PermissionLogProvider) Start(_ EntryAdder, _ func(error)) error { return nil }

@@ -1,0 +1,6 @@
+PASS: TestAddBetaApplication (0.07s)
+PASS: TestGetBetaApplicationByUser (0.00s)
+PASS: TestActivateBetaApplication (0.10s)
+PASS: TestExpireBetaApplication (0.00s)
+PASS: TestGetBetaApplicationByUserNotFound (0.00s)
+5/5 PASS

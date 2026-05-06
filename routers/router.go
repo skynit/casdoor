@@ -322,6 +322,18 @@ func InitAPI() {
 	web.Router("/api/add-form", &controllers.ApiController{}, "POST:AddForm")
 	web.Router("/api/delete-form", &controllers.ApiController{}, "POST:DeleteForm")
 
+	// Beta API
+	web.Router("/api/apply-beta", &controllers.ApiController{}, "POST:ApplyBeta")
+	web.Router("/api/activate-beta", &controllers.ApiController{}, "POST:ActivateBeta")
+	web.Router("/api/get-beta-status", &controllers.ApiController{}, "GET:GetBetaStatus")
+	web.Router("/api/get-beta-applications", &controllers.ApiController{}, "GET:GetBetaApplications")
+
+	web.Router("/api/get-activation-codes", &controllers.ApiController{}, "GET:GetActivationCodes")
+	web.Router("/api/get-activation-code", &controllers.ApiController{}, "GET:GetActivationCode")
+	web.Router("/api/add-activation-code", &controllers.ApiController{}, "POST:AddActivationCode")
+	web.Router("/api/add-activation-codes", &controllers.ApiController{}, "POST:AddActivationCodes")
+	web.Router("/api/delete-activation-code", &controllers.ApiController{}, "POST:DeleteActivationCode")
+
 	web.Router("/api/get-syncers", &controllers.ApiController{}, "GET:GetSyncers")
 	web.Router("/api/get-syncer", &controllers.ApiController{}, "GET:GetSyncer")
 	web.Router("/api/update-syncer", &controllers.ApiController{}, "POST:UpdateSyncer")

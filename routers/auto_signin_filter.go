@@ -38,6 +38,9 @@ func AutoSigninFilter(ctx *context.Context) {
 			}
 		}
 	}
+	if urlPath == "/api/activate-beta" {
+		return
+	}
 	//if getSessionUser(ctx) != "" {
 	//	return
 	//}

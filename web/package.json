@@ -26,7 +26,9 @@
     "@web3-onboard/trust": "^2.0.4",
     "antd": "6.3.5",
     "antd-token-previewer": "^3.0.0",
+    "baseline-browser-mapping": "^2.10.25",
     "buffer": "^6.0.3",
+    "caniuse-lite": "^1.0.30001791",
     "codemirror": "^6.0.1",
     "cookie": "0.5.0",
     "copy-to-clipboard": "^3.3.1",
@@ -54,10 +56,10 @@
     "react-highlight-words": "^0.18.0",
     "react-i18next": "^11.8.7",
     "react-metamask-avatar": "^1.2.1",
-    "reactflow": "^11.11.4",
     "react-router-dom": "^5.3.3",
     "react-scripts": "5.0.1",
     "react-social-login-buttons": "^3.4.0",
+    "reactflow": "^11.11.4",
     "xlsx": "^0.18.5"
   },
   "scripts": {
