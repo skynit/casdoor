@@ -14,7 +14,7 @@
 
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Modal, Table, message} from "antd";
+import {Button, Modal, Select, Table, message} from "antd";
 import {DownloadOutlined, UploadOutlined} from "@ant-design/icons";
 import moment from "moment";
 import * as Setting from "./Setting";
@@ -30,6 +30,7 @@ class ActivationCodeListPage extends BaseListPage {
       current: 1,
       pageSize: 10,
     };
+    this.state.activated = "";
   }
 
   getLabel(labelKey) {
@@ -61,11 +62,15 @@ class ActivationCodeListPage extends BaseListPage {
     if (values.length < 4) {
       return null;
     }
+    const statusNum = parseInt(values[2], 10);
+    if (isNaN(statusNum) || (statusNum !== 0 && statusNum !== 1 && statusNum !== 2)) {
+      return null;
+    }
     return {
       name: values[0],
       owner: "built-in",
-      createdTime: values[1] || moment().format(),
-      status: values[2] || "0",
+      createdTime: values[1] ? moment(values[1]).format() : moment().format(),
+      status: statusNum,
       application: values[3] || "",
     };
   }
@@ -202,11 +207,11 @@ class ActivationCodeListPage extends BaseListPage {
         ...this.getColumnSearchProps("status"),
         render: (text, record, index) => {
           switch (text) {
-          case "0":
+          case 0:
             return Setting.getTag("success", i18next.t("beta:Available"));
-          case "1":
+          case 1:
             return Setting.getTag("processing", i18next.t("beta:Assigned"));
-          case "2":
+          case 2:
             return Setting.getTag("error", i18next.t("beta:Expired"));
           default:
             return text;
@@ -223,8 +228,8 @@ class ActivationCodeListPage extends BaseListPage {
       },
       {
         title: i18next.t("beta:Assigned time"),
-        dataIndex: "assignedTime",
-        key: "assignedTime",
+        dataIndex: "assignedAt",
+        key: "assignedAt",
         width: 160,
         sorter: true,
         render: (text, record, index) => {
@@ -240,6 +245,16 @@ class ActivationCodeListPage extends BaseListPage {
         ...this.getColumnSearchProps("assignedTo"),
         render: (text, record, index) => {
           return text || "-";
+        },
+      },
+      {
+        title: i18next.t("beta:Activated time"),
+        dataIndex: "activatedAt",
+        key: "activatedAt",
+        width: 160,
+        sorter: true,
+        render: (text, record, index) => {
+          return text ? Setting.getFormattedDate(text) : "-";
         },
       },
       {
@@ -302,7 +317,7 @@ class ActivationCodeListPage extends BaseListPage {
       sortOrder: sortOrder,
     };
 
-    ActivationCodeBackend.getActivationCodes(filter.owner, filter.page, filter.pageSize, filter.field, filter.value, filter.sortField, filter.sortOrder)
+    ActivationCodeBackend.getActivationCodes(filter.owner, filter.page, filter.pageSize, filter.field, filter.value, filter.sortField, filter.sortOrder, this.state.activated)
       .then((res) => {
         if (res.status === "ok") {
           this.setState({
@@ -331,6 +346,18 @@ class ActivationCodeListPage extends BaseListPage {
 
     const actionButtons = (
       <div>
+        <Select
+          value={this.state.activated}
+          onChange={value => {
+            this.setState({activated: value}, () => this.fetch({pagination: this.state.pagination}));
+          }}
+          placeholder={i18next.t("beta:Activation status")}
+          style={{width: 120, marginRight: 8}}
+          allowClear
+        >
+          <Select.Option value="true">{i18next.t("beta:Activated")}</Select.Option>
+          <Select.Option value="false">{i18next.t("beta:Not activated")}</Select.Option>
+        </Select>
         <Button type="primary" icon={<DownloadOutlined />} size="small" onClick={() => this.handleExport()} style={{marginRight: 8}}>
           {i18next.t("general:Export")}
         </Button>

@@ -1730,6 +1730,10 @@
     "Expired": "已过期",
     "Assigned time": "分配时间",
     "Assigned to": "分配给",
+    "Activated time": "激活时间",
+    "Activation status": "激活状态",
+    "Activated": "已激活",
+    "Not activated": "未激活",
     "activation codes": "激活码"
   }
 }

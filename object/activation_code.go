@@ -32,6 +32,7 @@ type ActivationCode struct {
 	Application string `xorm:"varchar(100)" json:"application"`
 	AssignedAt  string `xorm:"varchar(100)" json:"assignedAt"`
 	AssignedTo  string `xorm:"varchar(100)" json:"assignedTo"`
+	ActivatedAt string `xorm:"varchar(100)" json:"activatedAt"`
 }
 
 func getActivationCode(owner string, name string) (*ActivationCode, error) {
@@ -63,7 +64,7 @@ func GetActivationCodes(owner string) ([]*ActivationCode, error) {
 	return codes, nil
 }
 
-func GetPaginationActivationCodes(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*ActivationCode, error) {
+func GetPaginationActivationCodes(owner string, offset, limit int, field, value, sortField, sortOrder, activated string) ([]*ActivationCode, error) {
 	codes := []*ActivationCode{}
 	session := ormer.Engine.Prepare()
 	if offset >= 0 && limit > 0 {
@@ -71,6 +72,11 @@ func GetPaginationActivationCodes(owner string, offset, limit int, field, value,
 	}
 	if owner != "" {
 		session = session.And("owner = ?", owner)
+	}
+	if activated == "true" {
+		session = session.And("activated_at IS NOT NULL")
+	} else if activated == "false" {
+		session = session.And("activated_at IS NULL")
 	}
 	if field != "" && value != "" {
 		if util.FilterField(field) {
@@ -92,10 +98,15 @@ func GetPaginationActivationCodes(owner string, offset, limit int, field, value,
 	return codes, nil
 }
 
-func GetActivationCodeCount(owner string, field, value string) (int64, error) {
+func GetActivationCodeCount(owner string, field, value, activated string) (int64, error) {
 	session := ormer.Engine.Prepare()
 	if owner != "" {
 		session = session.And("owner = ?", owner)
+	}
+	if activated == "true" {
+		session = session.And("activated_at IS NOT NULL")
+	} else if activated == "false" {
+		session = session.And("activated_at IS NULL")
 	}
 	if field != "" && value != "" {
 		if util.FilterField(field) {

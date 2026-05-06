@@ -14,8 +14,8 @@
 
 import * as Setting from "../Setting";
 
-export function getActivationCodes(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "") {
-  return fetch(`${Setting.ServerUrl}/api/get-activation-codes?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
+export function getActivationCodes(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "", activated = "") {
+  return fetch(`${Setting.ServerUrl}/api/get-activation-codes?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}&activated=${activated}`, {
     method: "GET",
     credentials: "include",
     headers: {

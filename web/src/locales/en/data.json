@@ -207,6 +207,10 @@
     "Expired": "Expired",
     "Assigned time": "Assigned time",
     "Assigned to": "Assigned to",
+    "Activated time": "Activated time",
+    "Activation status": "Activation status",
+    "Activated": "Activated",
+    "Not activated": "Not activated",
     "activation codes": "activation codes"
   },
   "cert": {

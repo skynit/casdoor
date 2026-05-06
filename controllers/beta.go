@@ -331,9 +331,10 @@ func (c *ApiController) ActivateBeta() {
 			return
 		}
 
-		// Mark activation code as used (status=1)
-		_, err = sess.ID(core.PK{code.Owner, code.Name}).Cols("status").Update(&object.ActivationCode{
-			Status: 1,
+		// Mark activation code as used (status=1) and record activation time
+		_, err = sess.ID(core.PK{code.Owner, code.Name}).Cols("status", "activated_at").Update(&object.ActivationCode{
+			Status:      1,
+			ActivatedAt: nowFormatted,
 		})
 		if err != nil {
 			sess.Rollback()
@@ -394,6 +395,7 @@ func (c *ApiController) GetActivationCodes() {
 	value := c.Ctx.Input.Query("value")
 	sortField := c.Ctx.Input.Query("sortField")
 	sortOrder := c.Ctx.Input.Query("sortOrder")
+	activated := c.Ctx.Input.Query("activated")
 
 	if limit == "" || page == "" {
 		codes, err := object.GetActivationCodes(owner)
@@ -404,14 +406,14 @@ func (c *ApiController) GetActivationCodes() {
 		c.ResponseOk(codes)
 	} else {
 		limitInt := util.ParseInt(limit)
-		count, err := object.GetActivationCodeCount(owner, field, value)
+		count, err := object.GetActivationCodeCount(owner, field, value, activated)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
 
 		paginator := pagination.NewPaginator(c.Ctx.Request, limitInt, count)
-		codes, err := object.GetPaginationActivationCodes(owner, paginator.Offset(), limitInt, field, value, sortField, sortOrder)
+		codes, err := object.GetPaginationActivationCodes(owner, paginator.Offset(), limitInt, field, value, sortField, sortOrder, activated)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
