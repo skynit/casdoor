@@ -46,11 +46,13 @@ class SingleCard extends React.Component {
       <Card.Grid style={gridStyle} onClick={() => Setting.goToLinkSoft(this, silentSigninLink)}>
         <img src={logo} alt="logo" width={"100%"} style={{marginBottom: "20px"}} />
         <Meta
-          title={title}
           description={desc}
-          style={{justifyContent: "center"}}
+          style={{justifyContent: "center", marginBottom: "8px"}}
         />
         {this.renderTags(tags)}
+        <div style={{textAlign: "center", fontWeight: 600, fontSize: "16px", marginTop: "12px"}}>
+          {title}
+        </div>
       </Card.Grid>
     );
   }
@@ -84,10 +86,13 @@ class SingleCard extends React.Component {
           onClick={() => Setting.goToLinkSoft(this, silentSigninLink)}
           style={isSingle ? {width: "320px", height: "100%"} : {width: "100%", height: "100%"}}
         >
-          <Meta title={title} description={desc} />
+          <Meta description={desc} style={{marginBottom: "8px"}} />
           {this.renderTags(tags)}
           <br />
           <Meta title={""} description={Setting.getFormattedDateShort(time)} />
+          <div style={{textAlign: "center", fontWeight: 600, fontSize: "16px", marginTop: "8px"}}>
+            {title}
+          </div>
         </Card>
       </Col>
     );
