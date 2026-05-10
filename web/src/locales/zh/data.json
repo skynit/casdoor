@@ -1718,12 +1718,12 @@
     "Apply for Beta": "申请 Beta",
     "Beta Testing": "Beta 测试",
     "Copy Code": "复制代码",
-    "Your Activation Code": "您的激活码",
-    "Activation Code": "激活码",
-    "Activation Codes": "激活码管理",
-    "Apply for an activation code to activate your device.": "申请一个激活码来激活您的设备。",
-    "Apply for Activation Code": "申请激活码",
-    "Please use this activation code on another device to complete activation.": "请在另一台设备上使用此激活码完成激活。",
+    "Your Activation Code": "您的邀请码",
+    "Activation Code": "邀请码",
+    "Activation Codes": "邀请码管理",
+    "Apply for an activation code to activate your device.": "申请一个邀请码来激活您的设备。",
+    "Apply for Activation Code": "申请邀请码",
+    "Please use this activation code on another device to complete activation.": "请在另一台设备上使用此邀请码完成激活。",
     "Status": "状态",
     "Available": "可用",
     "Assigned": "已分配",
@@ -1734,6 +1734,6 @@
     "Activation status": "激活状态",
     "Activated": "已激活",
     "Not activated": "未激活",
-    "activation codes": "激活码"
+    "activation codes": "邀请码"
   }
 }

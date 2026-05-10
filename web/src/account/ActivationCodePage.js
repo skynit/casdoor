@@ -111,9 +111,6 @@ class ActivationCodePage extends React.Component {
         >
           <Text strong style={{fontSize: "20px", letterSpacing: "2px"}}>{this.state.code}</Text>
         </Paragraph>
-        <Paragraph type="secondary">
-          {i18next.t("beta:Please use this activation code on another device to complete activation.")}
-        </Paragraph>
       </Card>
     );
   }
