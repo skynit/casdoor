@@ -324,14 +324,14 @@ func (c *ApiController) ActivateBeta() {
 	if app.Status == "activated" {
 		if app.DeviceId == req.DeviceId {
 			// Same device: re-issue JWT (idempotent)
-			token, err := signBetaTokenForActivate(req.DeviceId)
+			token, err := signBetaTokenForActivate(req.DeviceId, req.Code)
 			if err != nil {
 				c.ResponseError(err.Error())
 				return
 			}
 			c.ResponseOk(map[string]interface{}{
 				"token":      token,
-				"expires_in": 7776000,
+				"expires_in": 86400,
 			})
 			return
 		}
@@ -343,13 +343,13 @@ func (c *ApiController) ActivateBeta() {
 
 	// 8. status="pending" → first-time activation
 	if app.Status == "pending" {
-		token, err := signBetaTokenForActivate(req.DeviceId)
+		token, err := signBetaTokenForActivate(req.DeviceId, req.Code)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
 
-		tokenExpiry := time.Now().Add(90 * 24 * time.Hour).Format("2006-01-02T15:04:05+08:00")
+		tokenExpiry := time.Now().Add(24 * time.Hour).Format("2006-01-02T15:04:05+08:00")
 		nowFormatted := time.Now().Format("2006-01-02T15:04:05+08:00")
 
 		sess := object.GetOrmer().Engine.NewSession()
@@ -393,7 +393,7 @@ func (c *ApiController) ActivateBeta() {
 
 		c.ResponseOk(map[string]interface{}{
 			"token":      token,
-			"expires_in": 7776000,
+			"expires_in": 86400,
 		})
 		return
 	}
@@ -403,8 +403,8 @@ func (c *ApiController) ActivateBeta() {
 }
 
 // signBetaTokenForActivate 签发激活 JWT（优先使用配置证书，测试环境自动生成临时密钥）
-func signBetaTokenForActivate(deviceID string) (string, error) {
-	token, err := object.SignBetaToken(deviceID)
+func signBetaTokenForActivate(deviceID, activationCode string) (string, error) {
+	token, err := object.SignBetaToken(deviceID, activationCode)
 	if err == nil {
 		return token, nil
 	}
@@ -415,7 +415,7 @@ func signBetaTokenForActivate(deviceID string) (string, error) {
 		return "", fmt.Errorf("failed to generate test key: %w", genErr)
 	}
 
-	return object.SignBetaTokenForTest(deviceID, testKey, 90*24*time.Hour)
+	return object.SignBetaTokenForTest(deviceID, activationCode, testKey, 24*time.Hour)
 }
 
 // @Title GetActivationCodes

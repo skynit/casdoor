@@ -37,7 +37,7 @@ func TestSignBetaToken(t *testing.T) {
 	privateKey, publicKey := generateTestRSAKey(t)
 	deviceID := "test-device-001"
 
-	token, err := SignBetaTokenForTest(deviceID, privateKey, 90*24*time.Hour)
+	token, err := SignBetaTokenForTest(deviceID, "TEST-CODE", privateKey, 90*24*time.Hour)
 	if err != nil {
 		t.Fatalf("SignBetaTokenForTest failed: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestSignBetaTokenClaims(t *testing.T) {
 	privateKey, publicKey := generateTestRSAKey(t)
 	deviceID := "test-device-002"
 
-	token, err := SignBetaTokenForTest(deviceID, privateKey, 90*24*time.Hour)
+	token, err := SignBetaTokenForTest(deviceID, "TEST-CODE", privateKey, 90*24*time.Hour)
 	if err != nil {
 		t.Fatalf("SignBetaTokenForTest failed: %v", err)
 	}
@@ -76,6 +76,9 @@ func TestSignBetaTokenClaims(t *testing.T) {
 
 	if claims.DeviceID != deviceID {
 		t.Errorf("expected DeviceID=%s, got %s", deviceID, claims.DeviceID)
+	}
+	if claims.ActivationCode != "TEST-CODE" {
+		t.Errorf("expected ActivationCode=TEST-CODE, got %s", claims.ActivationCode)
 	}
 	if claims.Type != "activation" {
 		t.Errorf("expected Type=activation, got %s", claims.Type)
@@ -98,7 +101,7 @@ func TestSignBetaTokenExpired(t *testing.T) {
 	deviceID := "test-device-003"
 
 	// Create token with negative duration (already expired)
-	token, err := SignBetaTokenForTest(deviceID, privateKey, -time.Hour)
+	token, err := SignBetaTokenForTest(deviceID, "TEST-CODE", privateKey, -time.Hour)
 	if err != nil {
 		t.Fatalf("SignBetaTokenForTest failed: %v", err)
 	}
@@ -119,7 +122,7 @@ func TestBetaTokenTamperProof(t *testing.T) {
 	privateKey, publicKey := generateTestRSAKey(t)
 	deviceID := "test-device-004"
 
-	token, err := SignBetaTokenForTest(deviceID, privateKey, 90*24*time.Hour)
+	token, err := SignBetaTokenForTest(deviceID, "TEST-CODE", privateKey, 90*24*time.Hour)
 	if err != nil {
 		t.Fatalf("SignBetaTokenForTest failed: %v", err)
 	}

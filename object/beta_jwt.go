@@ -27,8 +27,9 @@ import (
 
 // BetaClaims represents the JWT claims for a beta activation token.
 type BetaClaims struct {
-	DeviceID string `json:"device_id"`
-	Type     string `json:"type"`
+	DeviceID       string `json:"device_id"`
+	ActivationCode string `json:"activation_code"`
+	Type           string `json:"type"`
 	jwt.RegisteredClaims
 }
 
@@ -61,11 +62,12 @@ func parsePrivateKey(pemData string) (*rsa.PrivateKey, error) {
 
 // SignBetaTokenForTest signs a beta activation JWT token using an explicitly
 // provided RSA private key and duration. Exported for use in tests.
-func SignBetaTokenForTest(deviceID string, privateKey *rsa.PrivateKey, duration time.Duration) (string, error) {
+func SignBetaTokenForTest(deviceID, activationCode string, privateKey *rsa.PrivateKey, duration time.Duration) (string, error) {
 	now := time.Now()
 	claims := &BetaClaims{
-		DeviceID: deviceID,
-		Type:     "activation",
+		DeviceID:       deviceID,
+		ActivationCode: activationCode,
+		Type:           "activation",
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "casdoor",
 			IssuedAt:  jwt.NewNumericDate(now),
@@ -78,7 +80,7 @@ func SignBetaTokenForTest(deviceID string, privateKey *rsa.PrivateKey, duration 
 
 // SignBetaToken signs a beta activation JWT token using the configured
 // beta JWT certificate stored in the Cert table.
-func SignBetaToken(deviceID string) (string, error) {
+func SignBetaToken(deviceID, activationCode string) (string, error) {
 	certName := conf.GetBetaJwtCertName()
 	if certName == "" {
 		return "", fmt.Errorf("beta JWT cert name not configured")
@@ -98,6 +100,6 @@ func SignBetaToken(deviceID string) (string, error) {
 	}
 
 	duration := time.Duration(conf.GetBetaJwtExpiryHours()) * time.Hour
-	return SignBetaTokenForTest(deviceID, privateKey, duration)
+	return SignBetaTokenForTest(deviceID, activationCode, privateKey, duration)
 }
 
