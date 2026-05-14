@@ -34,3 +34,13 @@ export function getBetaStatus() {
     },
   }).then(res => res.json());
 }
+
+export function resetMyBeta() {
+  return fetch(`${Setting.ServerUrl}/api/reset-my-beta`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Accept-Language": Setting.getAcceptLanguage(),
+    },
+  }).then(res => res.json());
+}

@@ -80,3 +80,13 @@ export function updateActivationCode(id, code) {
     },
   }).then(res => res.json());
 }
+
+export function resetActivationCode(id) {
+  return fetch(`${Setting.ServerUrl}/api/reset-activation-code?id=${encodeURIComponent(id)}`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Accept-Language": Setting.getAcceptLanguage(),
+    },
+  }).then(res => res.json());
+}

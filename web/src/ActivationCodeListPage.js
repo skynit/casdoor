@@ -57,6 +57,28 @@ class ActivationCodeListPage extends BaseListPage {
       });
   }
 
+  resetActivationCode(i) {
+    const record = this.state.data[i];
+    const id = `${record.owner}/${record.name}`;
+    ActivationCodeBackend.resetActivationCode(id)
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", i18next.t("general:Successfully reset"));
+          this.fetch({
+            pagination: {
+              ...this.state.pagination,
+              current: this.state.pagination.current,
+            },
+          });
+        } else {
+          Setting.showMessage("error", `${i18next.t("general:Failed to reset")}: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `${i18next.t("general:Failed to connect to server")}: ${error}`);
+      });
+  }
+
   parseRowData(row) {
     const values = row.split(",").map(v => v.trim());
     if (values.length < 4) {
@@ -261,11 +283,16 @@ class ActivationCodeListPage extends BaseListPage {
         title: i18next.t("general:Action"),
         dataIndex: "operation",
         key: "operation",
-        width: 100,
+        width: 180,
         fixed: "right",
         render: (text, record, index) => {
           return (
             <div>
+              <PopconfirmModal
+                onConfirm={() => this.resetActivationCode(index)}
+                text={i18next.t("general:Reset")}
+                title={i18next.t("general:Sure to reset")}
+              />
               <PopconfirmModal
                 onConfirm={() => this.deleteActivationCode(index)}
                 text={i18next.t("general:Delete")}

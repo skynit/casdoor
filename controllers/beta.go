@@ -186,6 +186,49 @@ func (c *ApiController) GetBetaStatus() {
 	})
 }
 
+// ResetMyBeta
+// @Title ResetMyBeta
+// @Tag Beta API
+// @Description reset the current user's activation binding, allowing re-activation with a different device
+// @Success 200 {object} controllers.Response The Response object
+// @router /reset-my-beta [post]
+func (c *ApiController) ResetMyBeta() {
+	userId := c.GetSessionUsername()
+	if userId == "" {
+		c.ResponseError("unauthorized")
+		c.Ctx.ResponseWriter.WriteHeader(401)
+		return
+	}
+	owner, _ := util.GetOwnerAndNameFromIdNoCheck(userId)
+
+	app, err := object.GetBetaApplicationByUser(owner, userId)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	if app == nil {
+		c.ResponseError("no_application")
+		return
+	}
+
+	_, err = object.ResetBetaApplication(app.GetId())
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	if app.ActivationCode != "" {
+		codeId := util.GetId("built-in", app.ActivationCode)
+		_, err = object.ResetActivationCode(codeId)
+		if err != nil {
+			c.ResponseError(err.Error())
+			return
+		}
+	}
+
+	c.ResponseOk(true)
+}
+
 // GetBetaApplications
 // @Title GetBetaApplications
 // @Tag Beta API
@@ -529,4 +572,54 @@ func (c *ApiController) DeleteActivationCode() {
 		return
 	}
 	c.ResponseOk(affected)
+}
+
+// ResetActivationCode
+// @Title ResetActivationCode
+// @Tag Beta API
+// @Description clear the device binding of an activation code, allowing the assigned user to re-activate with a different device
+// @Param   id     query    string  true        "The id (owner/name) of the activation code"
+// @Success 200 {object} controllers.Response The Response object
+// @router /reset-activation-code [post]
+func (c *ApiController) ResetActivationCode() {
+	if !c.IsAdmin() {
+		c.ResponseError("unauthorized")
+		c.Ctx.ResponseWriter.WriteHeader(401)
+		return
+	}
+
+	id := c.Ctx.Input.Query("id")
+	if id == "" {
+		c.ResponseError("missing_id")
+		return
+	}
+
+	// 1. Look up the activation code
+	code, err := object.GetActivationCode(id)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	if code == nil {
+		c.ResponseError("invalid_code")
+		return
+	}
+
+	// 2. Reset the linked BetaApplication if present
+	if code.Application != "" {
+		_, err = object.ResetBetaApplication(code.Application)
+		if err != nil {
+			c.ResponseError(err.Error())
+			return
+		}
+	}
+
+	// 3. Reset the activation code itself
+	_, err = object.ResetActivationCode(id)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.ResponseOk(true)
 }

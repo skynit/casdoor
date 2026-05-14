@@ -48,6 +48,7 @@ p, *, *, POST, /api/signup, *, *
 p, *, *, POST, /api/activate-beta, *, *
 p, *, *, POST, /api/activate, *, *
 p, *, *, POST, /api/apply-beta, *, *
+p, *, *, POST, /api/reset-my-beta, *, *
 p, *, *, GET, /api/get-beta-status, *, *
 p, *, *, GET, /api/get-email-and-phone, *, *
 p, *, *, POST, /api/login, *, *

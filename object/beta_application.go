@@ -121,6 +121,23 @@ func ExpireBetaApplication(owner, name string) (bool, error) {
 	return true, nil
 }
 
+func ResetBetaApplication(id string) (bool, error) {
+	owner, name, err := util.GetOwnerAndNameFromIdWithError(id)
+	if err != nil {
+		return false, err
+	}
+	_, err = ormer.Engine.ID(core.PK{owner, name}).Cols("device_id", "status", "activation_time", "token_expiry").Update(&BetaApplication{
+		DeviceId:       "",
+		Status:         "pending",
+		ActivationTime: "",
+		TokenExpiry:    "",
+	})
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func (app *BetaApplication) GetId() string {
 	return app.Owner + "/" + app.Name
 }

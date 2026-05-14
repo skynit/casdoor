@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Spin, Typography} from "antd";
-import {CheckCircleOutlined, CopyOutlined} from "@ant-design/icons";
+import {Button, Card, Popconfirm, Spin, Typography} from "antd";
+import {CheckCircleOutlined, CopyOutlined, ReloadOutlined} from "@ant-design/icons";
 import i18next from "i18next";
 import * as ActivationCodeBackend from "./ActivationCodeBackend";
 import * as Setting from "../Setting";
@@ -84,6 +84,24 @@ class ActivationCodePage extends React.Component {
       });
   }
 
+  handleReset() {
+    this.setState({loading: true});
+    ActivationCodeBackend.resetMyBeta()
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", "Activation reset successfully!");
+          this.fetchStatus();
+        } else {
+          Setting.showMessage("error", res.msg || "Error");
+          this.setState({loading: false});
+        }
+      })
+      .catch(() => {
+        Setting.showMessage("error", "Network error");
+        this.setState({loading: false});
+      });
+  }
+
   renderNoApplication() {
     return (
       <Card>
@@ -119,6 +137,17 @@ class ActivationCodePage extends React.Component {
     return (
       <Card>
         <Title level={3}>{i18next.t("beta:Activation Code")}</Title>
+        <Paragraph
+          copyable={{
+            text: this.state.code,
+            icon: [
+              <CopyOutlined key="copy" />,
+              <CheckCircleOutlined key="copied" />,
+            ],
+          }}
+        >
+          <Text strong style={{fontSize: "20px", letterSpacing: "2px"}}>{this.state.code}</Text>
+        </Paragraph>
         <Paragraph>
           <Text strong>Status: </Text>
           <Text type="success">Activated</Text>
@@ -135,6 +164,16 @@ class ActivationCodePage extends React.Component {
             <Text>{this.state.activationTime}</Text>
           </Paragraph>
         )}
+        <Popconfirm
+          title="Are you sure to reset the activation? You will need to re-activate with a device."
+          onConfirm={() => this.handleReset()}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="default" icon={<ReloadOutlined />} loading={this.state.loading}>
+            Reset Activation
+          </Button>
+        </Popconfirm>
       </Card>
     );
   }

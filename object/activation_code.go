@@ -74,22 +74,14 @@ func GetPaginationActivationCodes(owner string, offset, limit int, field, value,
 		session = session.And("owner = ?", owner)
 	}
 	if activated == "true" {
-		session = session.And("activated_at IS NOT NULL")
+		session = session.And("activated_at IS NOT NULL AND activated_at != ''")
 	} else if activated == "false" {
-		session = session.And("activated_at IS NULL")
+		session = session.And("(activated_at IS NULL OR activated_at = '')")
 	}
 	if field != "" && value != "" {
 		if util.FilterField(field) {
 			session = session.And(fmt.Sprintf("%s like ?", util.CamelToSnakeCase(field)), "%"+value+"%")
 		}
-	}
-	if sortField == "" || sortOrder == "" {
-		sortField = "created_time"
-	}
-	if sortOrder == "ascend" {
-		session = session.Asc(util.CamelToSnakeCase(sortField))
-	} else {
-		session = session.Desc(util.CamelToSnakeCase(sortField))
 	}
 	err := session.Find(&codes)
 	if err != nil {
@@ -104,9 +96,9 @@ func GetActivationCodeCount(owner string, field, value, activated string) (int64
 		session = session.And("owner = ?", owner)
 	}
 	if activated == "true" {
-		session = session.And("activated_at IS NOT NULL")
+		session = session.And("activated_at IS NOT NULL AND activated_at != ''")
 	} else if activated == "false" {
-		session = session.And("activated_at IS NULL")
+		session = session.And("(activated_at IS NULL OR activated_at = '')")
 	}
 	if field != "" && value != "" {
 		if util.FilterField(field) {
@@ -178,6 +170,24 @@ func MarkActivationCodeExpired(id string) (bool, error) {
 		Status: 2,
 	}
 	_, err = ormer.Engine.ID(core.PK{owner, name}).Cols("status").Update(code)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// ResetActivationCode clears the activation binding on an activation code,
+// allowing the assigned user to re-activate with a different device.
+// It only clears activated_at; status, application, and assigned fields remain unchanged.
+func ResetActivationCode(id string) (bool, error) {
+	owner, name, err := util.GetOwnerAndNameFromIdWithError(id)
+	if err != nil {
+		return false, err
+	}
+	code := &ActivationCode{
+		ActivatedAt: "",
+	}
+	_, err = ormer.Engine.ID(core.PK{owner, name}).Cols("activated_at").Update(code)
 	if err != nil {
 		return false, err
 	}
