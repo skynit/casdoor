@@ -623,3 +623,26 @@ func (c *ApiController) ResetActivationCode() {
 
 	c.ResponseOk(true)
 }
+
+// GetActivationCodeStats
+// @Title GetActivationCodeStats
+// @Tag Beta API
+// @Description get activation code statistics
+// @Param   owner     query    string  true        "The owner of activation codes"
+// @Success 200 {object} object.ActivationCodeStats The Response object
+// @router /get-activation-code-stats [get]
+func (c *ApiController) GetActivationCodeStats() {
+	if !c.IsAdmin() {
+		c.ResponseError("unauthorized")
+		c.Ctx.ResponseWriter.WriteHeader(401)
+		return
+	}
+
+	owner := c.Ctx.Input.Query("owner")
+	stats, err := object.GetActivationCodeStats(owner)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	c.ResponseOk(stats)
+}

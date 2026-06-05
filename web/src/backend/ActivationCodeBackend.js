@@ -81,6 +81,16 @@ export function updateActivationCode(id, code) {
   }).then(res => res.json());
 }
 
+export function getActivationCodeStats(owner) {
+  return fetch(`${Setting.ServerUrl}/api/get-activation-code-stats?owner=${owner}`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Accept-Language": Setting.getAcceptLanguage(),
+    },
+  }).then(res => res.json());
+}
+
 export function resetActivationCode(id) {
   return fetch(`${Setting.ServerUrl}/api/reset-activation-code?id=${encodeURIComponent(id)}`, {
     method: "POST",

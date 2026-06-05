@@ -211,6 +211,8 @@
     "Activation status": "Invitation status",
     "Activated": "Activated",
     "Not activated": "Not activated",
+    "Total codes": "Total codes",
+    "Assigned codes": "Assigned codes",
     "activation codes": "invitation codes"
   },
   "cert": {

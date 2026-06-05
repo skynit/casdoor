@@ -212,3 +212,26 @@ func DeleteActivationCode(owner, name string) (bool, error) {
 	}
 	return affected != 0, nil
 }
+
+type ActivationCodeStats struct {
+	Total    int64 `json:"total"`
+	Assigned int64 `json:"assigned"`
+}
+
+func GetActivationCodeStats(owner string) (*ActivationCodeStats, error) {
+	stats := &ActivationCodeStats{}
+
+	total, err := ormer.Engine.Where("owner = ?", owner).Count(&ActivationCode{})
+	if err != nil {
+		return nil, err
+	}
+	stats.Total = total
+
+	assigned, err := ormer.Engine.Where("owner = ? AND status = 1", owner).Count(&ActivationCode{})
+	if err != nil {
+		return nil, err
+	}
+	stats.Assigned = assigned
+
+	return stats, nil
+}

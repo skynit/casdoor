@@ -335,6 +335,7 @@ func InitAPI() {
 	web.Router("/api/add-activation-codes", &controllers.ApiController{}, "POST:AddActivationCodes")
 	web.Router("/api/delete-activation-code", &controllers.ApiController{}, "POST:DeleteActivationCode")
 	web.Router("/api/reset-activation-code", &controllers.ApiController{}, "POST:ResetActivationCode")
+	web.Router("/api/get-activation-code-stats", &controllers.ApiController{}, "GET:GetActivationCodeStats")
 
 	web.Router("/api/get-syncers", &controllers.ApiController{}, "GET:GetSyncers")
 	web.Router("/api/get-syncer", &controllers.ApiController{}, "GET:GetSyncer")

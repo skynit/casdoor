@@ -31,6 +31,20 @@ class ActivationCodeListPage extends BaseListPage {
       pageSize: 10,
     };
     this.state.activated = "";
+    this.state.stats = null;
+  }
+
+  componentDidMount() {
+    this.fetchStats();
+  }
+
+  fetchStats() {
+    ActivationCodeBackend.getActivationCodeStats("built-in")
+      .then((res) => {
+        if (res.status === "ok") {
+          this.setState({stats: res.data});
+        }
+      });
   }
 
   getLabel(labelKey) {
@@ -371,6 +385,13 @@ class ActivationCodeListPage extends BaseListPage {
       return <div>{i18next.t("login:Loading")}</div>;
     }
 
+    const statsBar = this.state.stats ? (
+      <div style={{marginBottom: 16, display: "flex", gap: 24, fontSize: 14}}>
+        <span>{i18next.t("beta:Total codes")}: <b>{this.state.stats.total}</b></span>
+        <span>{i18next.t("beta:Assigned codes")}: <b>{this.state.stats.assigned}</b></span>
+      </div>
+    ) : null;
+
     const actionButtons = (
       <div>
         <Select
@@ -396,6 +417,7 @@ class ActivationCodeListPage extends BaseListPage {
 
     return (
       <div>
+        {statsBar}
         {actionButtons}
         {this.renderTable(this.state.data || [])}
       </div>
