@@ -14,7 +14,7 @@
 
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Modal, Select, Table, message} from "antd";
+import {Button, Modal, Select, Switch, Table, message} from "antd";
 import {DownloadOutlined, UploadOutlined} from "@ant-design/icons";
 import moment from "moment";
 import * as Setting from "./Setting";
@@ -32,10 +32,36 @@ class ActivationCodeListPage extends BaseListPage {
     };
     this.state.activated = "";
     this.state.stats = null;
+    this.state.betaPaused = false;
   }
 
   componentDidMount() {
     this.fetchStats();
+    this.fetchBetaPaused();
+  }
+
+  fetchBetaPaused() {
+    ActivationCodeBackend.getBetaPaused()
+      .then((res) => {
+        if (res.status === "ok") {
+          this.setState({betaPaused: res.data?.paused || false});
+        }
+      });
+  }
+
+  toggleBetaPaused(paused) {
+    ActivationCodeBackend.setBetaPaused(paused)
+      .then((res) => {
+        if (res.status === "ok") {
+          this.setState({betaPaused: paused});
+          Setting.showMessage("success", paused ? i18next.t("beta:Beta paused") : i18next.t("beta:Beta resumed"));
+        } else {
+          Setting.showMessage("error", `${i18next.t("general:Failed to update")}: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `${i18next.t("general:Failed to connect to server")}: ${error}`);
+      });
   }
 
   fetchStats() {
@@ -394,6 +420,12 @@ class ActivationCodeListPage extends BaseListPage {
 
     const actionButtons = (
       <div>
+        <span style={{marginRight: 8, fontSize: 14}}>{i18next.t("beta:Pause distribution")}:</span>
+        <Switch
+          checked={this.state.betaPaused}
+          onChange={checked => this.toggleBetaPaused(checked)}
+          style={{marginRight: 16}}
+        />
         <Select
           value={this.state.activated}
           onChange={value => {

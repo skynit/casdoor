@@ -94,7 +94,18 @@ func (c *ApiController) ApplyBeta() {
 		return
 	}
 
-	// 4. Get available activation code
+	// 4. Check if beta distribution is paused
+	paused, err := object.GetBetaPaused()
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	if paused {
+		c.ResponseError("内测码已经暂停发放。The distribution of beta access codes has been suspended.")
+		return
+	}
+
+	// 5. Get available activation code
 	code, err := object.GetAvailableActivationCode("built-in")
 	if err != nil {
 		c.ResponseError(err.Error())
@@ -296,7 +307,7 @@ func (c *ApiController) ActivateBeta() {
 		return
 	}
 
-// 5. Check ActivationCode status
+	// 5. Check ActivationCode status
 	// status=0: not yet applied, reject (must apply first via /api/apply-beta)
 	// status=1: already applied/reserved, can be activated
 	// status=2: expired, reject
@@ -645,4 +656,59 @@ func (c *ApiController) GetActivationCodeStats() {
 		return
 	}
 	c.ResponseOk(stats)
+}
+
+// GetBetaPausedStatus
+// @Title GetBetaPausedStatus
+// @Tag Beta API
+// @Description get beta distribution paused status
+// @Success 200 {object} map[string]bool The Response object
+// @router /get-beta-paused [get]
+func (c *ApiController) GetBetaPausedStatus() {
+	if !c.IsAdmin() {
+		c.ResponseError("unauthorized")
+		c.Ctx.ResponseWriter.WriteHeader(401)
+		return
+	}
+
+	paused, err := object.GetBetaPaused()
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	c.ResponseOk(map[string]bool{"paused": paused})
+}
+
+// SetBetaPaused
+// @Title SetBetaPaused
+// @Tag Beta API
+// @Description set beta distribution paused status
+// @Param   body     body    map[string]bool  true        "{\"paused\": true}"
+// @Success 200 {object} controllers.Response The Response object
+// @router /set-beta-paused [post]
+func (c *ApiController) SetBetaPaused() {
+	if !c.IsAdmin() {
+		c.ResponseError("unauthorized")
+		c.Ctx.ResponseWriter.WriteHeader(401)
+		return
+	}
+
+	var body map[string]bool
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &body); err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	paused, ok := body["paused"]
+	if !ok {
+		c.ResponseError("missing 'paused' field")
+		return
+	}
+
+	err := object.SetBetaPaused(paused)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	c.ResponseOk(paused)
 }

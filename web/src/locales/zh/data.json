@@ -1736,6 +1736,9 @@
     "Not activated": "未激活",
     "Total codes": "激活码总数",
     "Assigned codes": "已分配数量",
+    "Pause distribution": "暂停发放",
+    "Beta paused": "已暂停激活码发放",
+    "Beta resumed": "已恢复激活码发放",
     "activation codes": "邀请码"
   }
 }

@@ -213,6 +213,9 @@
     "Not activated": "Not activated",
     "Total codes": "Total codes",
     "Assigned codes": "Assigned codes",
+    "Pause distribution": "Pause distribution",
+    "Beta paused": "Beta distribution paused",
+    "Beta resumed": "Beta distribution resumed",
     "activation codes": "invitation codes"
   },
   "cert": {

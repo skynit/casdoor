@@ -235,3 +235,20 @@ func GetActivationCodeStats(owner string) (*ActivationCodeStats, error) {
 
 	return stats, nil
 }
+
+func GetBetaPaused() (bool, error) {
+	org := &Organization{Owner: "admin", Name: "built-in"}
+	existed, err := ormer.Engine.Get(org)
+	if err != nil {
+		return false, err
+	}
+	if !existed {
+		return false, nil
+	}
+	return org.BetaPaused, nil
+}
+
+func SetBetaPaused(paused bool) error {
+	_, err := ormer.Engine.ID(core.PK{"admin", "built-in"}).Cols("beta_paused").Update(&Organization{BetaPaused: paused})
+	return err
+}

@@ -91,6 +91,27 @@ export function getActivationCodeStats(owner) {
   }).then(res => res.json());
 }
 
+export function getBetaPaused() {
+  return fetch(`${Setting.ServerUrl}/api/get-beta-paused`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Accept-Language": Setting.getAcceptLanguage(),
+    },
+  }).then(res => res.json());
+}
+
+export function setBetaPaused(paused) {
+  return fetch(`${Setting.ServerUrl}/api/set-beta-paused`, {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify({paused}),
+    headers: {
+      "Accept-Language": Setting.getAcceptLanguage(),
+    },
+  }).then(res => res.json());
+}
+
 export function resetActivationCode(id) {
   return fetch(`${Setting.ServerUrl}/api/reset-activation-code?id=${encodeURIComponent(id)}`, {
     method: "POST",

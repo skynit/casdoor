@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: STANDARD
-    image: skynit/casdoor:1.0.3 # 构建后的镜像标签
+    image: skynit/casdoor:1.0.4 # 构建后的镜像标签
     restart: unless-stopped
     container_name: casdoor
     ports:
