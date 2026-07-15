@@ -101,7 +101,7 @@ func (c *ApiController) ApplyBeta() {
 		return
 	}
 	if paused {
-		c.ResponseError("内测码已经暂停发放。The distribution of beta access codes has been suspended.")
+		c.ResponseError("第一轮内测已结束，请等待公测后再体验，感谢您的关注。\nThe first round of closed beta codes has ended. Please wait for the open beta to experience it. Thank you for your attention.")
 		return
 	}
 
